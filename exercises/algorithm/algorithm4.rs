@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -51,12 +50,69 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        if self.root.is_none() {
+            self.root = Some(Box::new(TreeNode::new(value)));
+        }
+        else{
+            let mut current = self.root.as_mut().unwrap();
+            loop{
+                match current.value.cmp(&value){
+                    Ordering::Less => {
+                        match current.left{
+                            Some(ref mut left_child) => current = left_child,
+                            None => {
+                                current.left = Some(Box::new(TreeNode::new(value)));
+                                return;
+                            }
+                        }
+                    },
+                    Ordering::Equal => return,
+                    Ordering::Greater => {
+                        current= match current.right{
+                            Some(ref mut right_child) => right_child,
+                            None => {
+                                current.right = Some(Box::new(TreeNode::new(value)));
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+
     }
 
     // Search for a value in the BST
-    fn search(&self, value: T) -> bool {
+    fn search(&mut self, value: T) -> bool {
         //TODO
-        true
+        if self.root.is_none() {
+            false
+        }
+        else{
+            let mut current = self.root.as_mut().unwrap();
+            loop{
+                match current.value.cmp(&value){
+                    Ordering::Less => {
+                        match current.left{
+                            Some(ref mut left_child) => current = left_child,
+                            None => {
+                                return false;
+                            }
+                        }
+                    },
+                    Ordering::Equal => {return true;},
+                    Ordering::Greater => {
+                        current= match current.right{
+                            Some(ref mut right_child) => right_child,
+                            None => {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
